@@ -1,0 +1,48 @@
+---
+title: Untitled
+subtitle: A slightly longer title
+format:
+  360-analysis-html: default
+author: James Goldie
+date: last-modified
+code-fold: true
+---
+
+
+```{r}
+#| label: setup
+library(tidyverse)
+library(here)
+```
+
+
+```{r}
+#| label: load-data
+here("data", "raw") |>
+  list.files(pattern = glob2rx("*.csv"), full.names = TRUE) |>
+  map_dfr(read_csv) ->
+all_data
+```
+
+```{r}
+#| label: pre-natal
+all_data |>
+  filter(
+    cause == "Neonatal preterm birth",
+    metric == "Rate",
+    age == "<28 days") |>
+  select(location, rei, year, val, upper, lower) |>
+  write_csv(here("data", "lt28days-allsex-preterm-pollution-deathrate100k.csv")) ->
+preterms
+```
+
+
+```{r}
+#| label: all-cause
+all_data |>
+  filter(
+    is.na(cause)) |>
+  select(location, rei, year, val, upper, lower) |>
+  write_csv(here("data", "agestd-allsex-allcause-pollutiontemp-sev.csv")) ->
+all_cause
+```
