@@ -1,0 +1,183 @@
+---
+# omit title and subtitle if you're doing a custom title block
+title: Changing climate, changing risks
+subtitle: |
+  The Global Burden of Disease study estimates how exposed countries were to each of these risks over **1990–2019** on a scale from 0 to 100.<br><br>
+
+  Exposure to [**cold**]{style='color: #0570b0'} has changed little over 1990–2019 – although death rates have generally fallen as countries better protect their residents. But [**heat**]{style='color:#e31a1c'} and [**air pollution**]{style="color: #222"} are becoming bigger problems in many parts of the world.
+
+# for social previews
+pagetitle: Changing climate, changing risks
+description: The Global Burden of Disease study estimates how exposed countries were to each of these risks over 1990–2019 on a scale from 0 to 100.
+twitter-card:
+  site: "@360info_global"
+  image: "/folder/example.png"
+open-graph:
+  image: "/folder/example.png"
+resources:
+  # - example.png
+  - /data/agestd-allsex-allcause-pollutiontemp-sev-byrisk.csv
+format:
+  360-embed-html:
+    css: style.css
+# metadata for modals and embed sharing functionality
+360embed:
+  byline: James Goldie, 360info
+  data-source: Global Burden of Disease 2019
+  type: map
+  aspect-ratio: 1 / 2
+  min-height: 600px
+  max-height: 650px
+  bg-colour: white
+  title: "Interactive: changing climate, changing risks"
+  repo: report-airpollution-health
+  domain: https://airpollution.360visuals.org
+  path: /airpollution-temperature/
+  fragments:
+  about: |
+    The data in this chart comes from the [Global Burden of Disease (2019)](https://ghdx.healthdata.org/gbd-2019), a 
+---
+
+```{ojs}
+//| label: load-data
+allData = FileAttachment("/data/agestd-allsex-allcause-pollutiontemp-sev-byrisk.csv")
+  .csv({ typed: true })
+```
+
+```{ojs}
+//| label: filter-and-summarise
+sortedData = d3.sort(allData, (a, b) => d3.ascending(a.year, b.year))
+filteredData =
+  d3.groups(sortedData, d => d.location)
+    .map(([key, data]) => ({
+      Country: key,
+      floor: d3.min([
+        ...data.map(d => d.val_lowtemp),
+        ...data.map(d => d.val_hightemp),
+        ...data.map(d => d.val_pollution)
+      ]),
+      ceiling: d3.max([
+        ...data.map(d => d.val_lowtemp),
+        ...data.map(d => d.val_hightemp),
+        ...data.map(d => d.val_pollution)
+      ]),
+      "Low temperature": data.map(d => ({ year: d.year, val: d.val_lowtemp })),
+      "High temperature": data.map(d => ({ year: d.year, val: d.val_hightemp })),
+      "Air pollution": data.map(d => ({ year: d.year, val: d.val_pollution }))
+    }))
+```
+
+```{ojs}
+//| label: sparkarea-fn
+sparkarea = function(data, colour = "#333", floor = 0, ceiling = 100) {
+  return Plot.plot({
+    marks: [
+      Plot.areaY(data, {
+        x: "year",
+        y: "val",
+        fill: colour,
+        fillOpacity: 0.2
+      }),
+      Plot.line(data, {
+        x: "year",
+        y: "val",
+        stroke: colour,
+        size: 2
+      }),
+      Plot.text(data, Plot.selectFirst({
+        x: "year",
+        y: "val",
+        text: d => d3.format(".1f")(d.val),
+        fill: colour,
+        stroke: "white",
+        strokeWidth: 7,
+        dx: -10,
+        textAnchor: "start",
+        fontSize: 32
+      })),
+      Plot.text(data, Plot.selectLast({
+        x: "year",
+        y: "val",
+        text: d => d3.format(".1f")(d.val),
+        fill: colour,
+        stroke: "white",
+        strokeWidth: 7,
+        fontWeight: "bold",
+        dx: 10,
+        textAnchor: "end",
+        fontSize: 32
+      })),
+    ],
+    y: {
+      domain: [floor, ceiling]
+    },
+    marginLeft: 10,
+    marginRight: 10,
+    marginTop: 10,
+    marginBottom: 40,
+    axis: null,
+    height: 100,
+    style: {
+      background: "transparent",
+      fontFamily: "Roboto Condensed"
+    }
+  })
+}
+```
+
+```{ojs}
+//| label: search
+viewof searchResults = Inputs.search(filteredData)
+```
+
+```{ojs}
+//| label: display
+
+isWide = width > 500
+
+viewTable =
+  isWide ?
+    // wider: use a table
+    Inputs.table(searchResults, {
+      columns: ["Country", "Low temperature", "High temperature", "Air pollution"],
+      width: {
+        "Country": 25
+      },
+      sort: "country",
+      height: 400,
+      format: {
+        "Country": c => md`**${c.replaceAll(" ", "<br>")}**`,
+        "Low temperature": (data, i) => sparkarea(
+          data,
+          "#0570b0",
+          filteredData[i].floor,
+          filteredData[i].ceiling),
+        "High temperature": (data, i) => sparkarea(
+          data,
+          "#e31a1c",
+          filteredData[i].floor,
+          filteredData[i].ceiling),
+        "Air pollution": (data, i) => sparkarea(
+          data,
+          "#222",
+          filteredData[i].floor,
+          filteredData[i].ceiling)
+      }
+    }) :
+    // list view at narrow widths (styled by css)
+    html`<div class="list-view">${searchResults.map(c => html`
+      <div class="list-card">
+        <h3>${c.Country}</h3>
+        <h4>Low temperature</h4>
+        <p>${sparkarea(c["Low temperature"], "#0570b0", c.floor, c.ceiling)}</p>
+        <h4>High temperature</h4>
+        <p>${sparkarea(c["High temperature"], "#e31a1c", c.floor, c.ceiling)}</p>
+        <h4>Air pollution</h4>
+        <p>${sparkarea(c["Air pollution"], "#222", c.floor, c.ceiling)}</p>
+      </div>
+    `)}</div>`
+```
+ 
+{{< include _popups/_buttons.qmd >}}
+
+{{< include _popups/_dialogs.qmd >}}

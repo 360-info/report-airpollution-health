@@ -1,14 +1,13 @@
 ---
 format: gfm
 360readme:
-  title: Title here
-  summary: One line summary here
-  repo: report-example
-  share-url: https://example.360visuals.org/example
+  title: Air pollution and health
+  summary: Visualises the changing risks of heat, cold and ambient air pollution
+  repo: report-airpollution-health
+  share-url: https://airpollution.360visuals.org/airpollution-temperature
   data-sources: |
     <ul>
-      <li><a href="https://example.com">Example 1</a></li>
-      <li><a href="https://example.com">Example 2</a></li>
+      <li><a href="https://ghdx.healthdata.org/gbd-2019">Global Burden of Disease (2019</a></li>
     </ul>
 ---
 

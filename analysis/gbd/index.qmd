@@ -12,6 +12,7 @@ code-fold: true
 ```{r}
 #| label: setup
 library(tidyverse)
+library(countrycode)
 library(here)
 ```
 
@@ -36,7 +37,6 @@ all_data |>
 preterms
 ```
 
-
 ```{r}
 #| label: all-cause
 all_data |>
@@ -45,4 +45,42 @@ all_data |>
   select(location, rei, year, val, upper, lower) |>
   write_csv(here("data", "agestd-allsex-allcause-pollutiontemp-sev.csv")) ->
 all_cause
+```
+
+Let's do the all-cause stuff wide by year and by measure, so we can show it in Datawrapper as a table:
+
+```{r}
+#| label: widen-allcause-yearsandrisks
+all_cause |>
+  select(-upper, -lower) |>
+  mutate(rei = case_match(rei,
+    "High temperature"                     ~ "hightemp",
+    "Low temperature"                      ~ "lowtemp",
+    "Ambient particulate matter pollution" ~ "pollution")) |>
+  pivot_wider(id_cols = location, names_from = c(rei, year), values_from = val) |>
+  # round figures off and add iso2 codes
+  mutate(
+    across(where(is.numeric), ~ round(.x, 4)),
+    iso2 = countrycode(location, "country.name", "iso2c")) |>
+  select(iso2, location, sort(tidyselect::peek_vars())) |>
+  write_csv(here("data", "agestd-allsex-allcause-pollutiontemp-sev-wide.csv")) ->
+all_cause_widest
+```
+
+And one more where we just widen by risk, not year:
+
+
+```{r}
+#| label: widen-allcause-byrisk
+all_cause |>
+  mutate(rei = case_match(rei,
+    "High temperature"                     ~ "hightemp",
+    "Low temperature"                      ~ "lowtemp",
+    "Ambient particulate matter pollution" ~ "pollution")) |>
+  pivot_wider(
+    id_cols = c(location, year),
+    names_from = rei,
+    values_from = c(val, upper, lower)) |>
+  write_csv(here("data", "agestd-allsex-allcause-pollutiontemp-sev-byrisk.csv")) ->
+all_cause_byrisk
 ```
