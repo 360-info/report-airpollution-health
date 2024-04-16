@@ -9,16 +9,16 @@ Visualises the changing risks of heat, cold and ambient air pollution
 
 <figure>
 <img
-src="https://mirrors.creativecommons.org/presskit/buttons/80x15/png/by.png"
-alt="Creative Commons Attribution 4.0" />
+src="https://mirrors.creativecommons.org/presskit/buttons/80x15/png/by-nc.png"
+alt="Creative Commons Attribution Non-Commercial 4.0" />
 <figcaption aria-hidden="true"><a
 href="https://creativecommons.org/licenses/by/4.0">Creative Commons
-Attribution 4.0</a></figcaption>
+Attribution Non-Commercial 4.0</a></figcaption>
 </figure>
 
 These charts, as well as the analyses that underpin them, are available
-under a Creative Commons Attribution 4.0 licence. This includes
-commercial reuse and derivates.
+under a [Creative Commons Attribution Non-Commercial 4.0
+licence](https://creativecommons.org/licenses/by-nc/4.0).
 
 <!-- Do any of the data sources fall under a different licence? If so, describe the licence and which parts of the data fall under it here! if most of it does, change the above and replace LICENCE.md too -->
 

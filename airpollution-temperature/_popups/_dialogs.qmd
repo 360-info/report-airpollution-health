@@ -18,7 +18,7 @@ micro.init({
 :::: {#modal-useremix-content}
 ## Use + Remix
 
-This {{< meta 360embed.type >}}, as well as the analysis that underpins it, is available under a [**Creative Commons Attribution 4.0 licence**](https://creativecommons.org/licenses/by/4.0).
+This {{< meta 360embed.type >}}, as well as the analysis that underpins it, is available under a [**Creative Commons Non-commercial Attribution 4.0 licence**](https://creativecommons.org/licenses/by-nc/4.0).
 
 Please acknowledge [360info](https://360info.org) and our data sources when you use them.
 
