@@ -35,7 +35,7 @@ format:
   path: /airpollution-temperature/
   fragments:
   about: |
-    The data in this chart comes from the [Global Burden of Disease (2019)](https://ghdx.healthdata.org/gbd-2019).<br><br>
+    The data in this chart comes from the [Global Burden of Disease (2019)](https://ghdx.healthdata.org/gbd-2019). (Used under the non-commercial [IHME Free-of-Charge Non-commercial User Agreement](https://www.healthdata.org/about/ihme-free-charge-non-commercial-user-agreement).)<br><br>
 
     The Global Burden of Disease uses a measure called the Summary Exposure Value (SEV) to compare risks that might be very different in nature.<br><br>
     
