@@ -12,7 +12,7 @@ Visualises the changing risks of heat, cold and ambient air pollution
 src="https://mirrors.creativecommons.org/presskit/buttons/80x15/png/by-nc.png"
 alt="Creative Commons Attribution Non-Commercial 4.0" />
 <figcaption aria-hidden="true"><a
-href="https://creativecommons.org/licenses/by/4.0">Creative Commons
+href="https://creativecommons.org/licenses/by-nc/4.0">Creative Commons
 Attribution Non-Commercial 4.0</a></figcaption>
 </figure>
 
@@ -27,7 +27,7 @@ Data in these charts comes from:
 <ul>  
 <li>  
 <a href="https://ghdx.healthdata.org/gbd-2019">Global Burden of Disease
-(2019</a>  
+(2019)</a>  
 </li>  
 </ul>
 
