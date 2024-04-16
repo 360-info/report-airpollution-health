@@ -35,9 +35,9 @@ format:
   path: /airpollution-temperature/
   fragments:
   about: |
-    The data in this chart comes from the [Global Burden of Disease (2019)](https://ghdx.healthdata.org/gbd-2019).
+    The data in this chart comes from the [Global Burden of Disease (2019)](https://ghdx.healthdata.org/gbd-2019).<br><br>
 
-    The Global Burden of Disease uses a measure called the Summary Exposure Value (SEV) to compare risks that might be very different in nature.
+    The Global Burden of Disease uses a measure called the Summary Exposure Value (SEV) to compare risks that might be very different in nature.<br><br>
     
     The SEV scales from 0 to 100 and compares how much risk a population has compared to a hypothetical one that is completely exposed to the disk. A score of 100 means a population is completely exposed; a score of 0 means it has no exposure.
 ---
@@ -135,51 +135,54 @@ viewof searchResults = Inputs.search(filteredData)
 ```
 
 ```{ojs}
-//| label: display
-
+//| output: false
 isWide = width > 500
 
-viewTable =
-  isWide ?
-    // wider: use a table
-    Inputs.table(searchResults, {
-      columns: ["Country", "Low temperature", "High temperature", "Air pollution"],
-      width: {
-        "Country": 25
-      },
-      sort: "country",
-      height: 400,
-      format: {
-        "Country": c => md`**${c.replaceAll(" ", "<br>")}**`,
-        "Low temperature": (data, i) => sparkarea(
-          data,
-          "#0570b0",
-          filteredData[i].floor,
-          filteredData[i].ceiling),
-        "High temperature": (data, i) => sparkarea(
-          data,
-          "#e31a1c",
-          filteredData[i].floor,
-          filteredData[i].ceiling),
-        "Air pollution": (data, i) => sparkarea(
-          data,
-          "#222",
-          filteredData[i].floor,
-          filteredData[i].ceiling)
-      }
-    }) :
-    // list view at narrow widths (styled by css)
-    html`<div class="list-view">${searchResults.map(c => html`
-      <div class="list-card">
-        <h3>${c.Country}</h3>
-        <h4>Low temperature</h4>
-        <p>${sparkarea(c["Low temperature"], "#0570b0", c.floor, c.ceiling)}</p>
-        <h4>High temperature</h4>
-        <p>${sparkarea(c["High temperature"], "#e31a1c", c.floor, c.ceiling)}</p>
-        <h4>Air pollution</h4>
-        <p>${sparkarea(c["Air pollution"], "#222", c.floor, c.ceiling)}</p>
-      </div>
-    `)}</div>`
+viewTable = Inputs.table(searchResults, {
+    columns: ["Country", "Low temperature", "High temperature", "Air pollution"],
+    width: {
+      "Country": 25
+    },
+    sort: "country",
+    height: 400,
+    format: {
+      "Country": c => md`**${c.replaceAll(" ", "<br>")}**`,
+      "Low temperature": (data, i) => sparkarea(
+        data,
+        "#0570b0",
+        filteredData[i].floor,
+        filteredData[i].ceiling),
+      "High temperature": (data, i) => sparkarea(
+        data,
+        "#e31a1c",
+        filteredData[i].floor,
+        filteredData[i].ceiling),
+      "Air pollution": (data, i) => sparkarea(
+        data,
+        "#222",
+        filteredData[i].floor,
+        filteredData[i].ceiling)
+    }
+  })
+
+viewList = html`
+  <div class="list-view">${searchResults.map(c => html`
+    <div class="list-card">
+      <h3>${c.Country}</h3>
+      <h4>Low temperature</h4>
+      <p>${sparkarea(c["Low temperature"], "#0570b0", c.floor, c.ceiling)}</p>
+      <h4>High temperature</h4>
+      <p>${sparkarea(c["High temperature"], "#e31a1c", c.floor, c.ceiling)}</p>
+      <h4>Air pollution</h4>
+      <p>${sparkarea(c["Air pollution"], "#222", c.floor, c.ceiling)}</p>
+    </div>
+  `)}</div>`
+```
+
+```{ojs}
+//| label: display
+// use either a table or list depending on screen width
+isWide ? html`${viewTable}` : html`${viewList}`
 ```
  
 {{< include _popups/_buttons.qmd >}}
