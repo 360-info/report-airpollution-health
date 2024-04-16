@@ -52,7 +52,7 @@ allData = FileAttachment("/data/agestd-allsex-allcause-pollutiontemp-sev-byrisk.
 //| label: filter-and-summarise
 sortedData = d3.sort(allData, (a, b) => d3.ascending(a.year, b.year))
 filteredData =
-  d3.groups(sortedData, d => d.location)
+  d3.groups(sortedData, d => d.country)
     .map(([key, data]) => ({
       Country: key,
       floor: d3.min([

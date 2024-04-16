@@ -47,7 +47,15 @@ all_data |>
 all_cause
 ```
 
-Let's do the all-cause stuff wide by year and by measure, so we can show it in Datawrapper as a table:
+Let's do the all-cause stuff wide by year and by measure, so we can show it in Datawrapper as a table.
+
+:::{.callout-warning}
+Datawrapper allows spans of columns to be joined as row-by-row line charts within a table, but if two of these line charts sit next to each other, they need a spacer column in between them.
+
+Unfortunately, the title of that column shows up unless we hide it with CSS.
+
+That, and the required column order, is why there's a bit of fiddliness here!
+:::
 
 ```{r}
 #| label: widen-allcause-yearsandrisks
@@ -58,27 +66,45 @@ all_cause |>
     "Low temperature"                      ~ "lowtemp",
     "Ambient particulate matter pollution" ~ "pollution")) |>
   pivot_wider(id_cols = location, names_from = c(rei, year), values_from = val) |>
-  # round figures off and add iso2 codes
+  # round figures off and add iso2 codes, then standardise country names
   mutate(
     across(where(is.numeric), ~ round(.x, 4)),
-    iso2 = countrycode(location, "country.name", "iso2c")) |>
-  select(iso2, location, sort(tidyselect::peek_vars())) |>
-  write_csv(here("data", "agestd-allsex-allcause-pollutiontemp-sev-wide.csv")) ->
+    iso2 = countrycode(location, "country.name", "iso2c"),
+    country = countrycode(iso2, "iso2c", "country.name"),
+    label = paste0(":", tolower(iso2), ": ", country),
+    # datawrapper requires a couple of dummy 'spacer' columns for our
+    # table-of-charts
+    `<span style='display:none;'>S1</span>` = NA,
+    `<span style='display:none;'>S2</span>` = NA) |>
+  select(sort(tidyselect::peek_vars())) |>
+  relocate(
+    contains("<span style='display:none;'>S1</span>"),
+    .after = starts_with("hightemp_")) |>
+  relocate(
+    contains("<span style='display:none;'>S2</span>"),
+    .after = starts_with("lowtemp_")) |>
+  relocate(label, .before = starts_with("hightemp_")) |>
+  write_csv(
+    here("data", "agestd-allsex-allcause-pollutiontemp-sev-wide.csv"),
+    na = "") ->
 all_cause_widest
 ```
 
 And one more where we just widen by risk, not year:
 
-
 ```{r}
 #| label: widen-allcause-byrisk
 all_cause |>
-  mutate(rei = case_match(rei,
-    "High temperature"                     ~ "hightemp",
-    "Low temperature"                      ~ "lowtemp",
-    "Ambient particulate matter pollution" ~ "pollution")) |>
+  mutate(
+    rei = case_match(rei,
+      "High temperature"                     ~ "hightemp",
+      "Low temperature"                      ~ "lowtemp",
+      "Ambient particulate matter pollution" ~ "pollution"),
+    iso2 = countrycode(location, "country.name", "iso2c"),
+    country = countrycode(iso2, "iso2c", "country.name")) |>
+  select(-location) |>
   pivot_wider(
-    id_cols = c(location, year),
+    id_cols = c(country, year),
     names_from = rei,
     values_from = c(val, upper, lower)) |>
   write_csv(here("data", "agestd-allsex-allcause-pollutiontemp-sev-byrisk.csv")) ->
