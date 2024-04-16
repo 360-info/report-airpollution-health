@@ -1,5 +1,18 @@
 #search {
+  padding: 8px;
+  background-color: #f2f2f2;
+  border-radius: 0.5em;
+  
   margin-bottom: 1em;
+}
+
+#search form {
+  --input-width: 100%;
+}
+
+#search output {
+  min-width: 70px;
+  flex-shrink: 10;
 }
 
 /* list view */
