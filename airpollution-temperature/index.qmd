@@ -26,7 +26,7 @@ format:
   data-source: Global Burden of Disease 2019
   type: map
   aspect-ratio: 1 / 2
-  min-height: 600px
+  min-height: 640px
   max-height: 650px
   bg-colour: white
   title: "Interactive: changing climate, changing risks"

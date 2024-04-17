@@ -31,8 +31,11 @@ Data in these charts comes from:
 </li>  
 </ul>
 
-(GBD data is used under the [IHME Free-of-Charge Non-commercial User
-Agreement](https://www.healthdata.org/about/ihme-free-charge-non-commercial-user-agreement).)
+> \[!IMPORTANT\] GBD data is used under the [IHME Free-of-Charge
+> Non-commercial User
+> Agreement](https://www.healthdata.org/about/ihme-free-charge-non-commercial-user-agreement),
+> which forbids commercial use of the data. Contact IHME for commercial
+> uses.
 
 **Please attribute 360info and the data sources when you use and remix
 these visualisations.**
